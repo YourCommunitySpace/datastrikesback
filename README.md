@@ -2,4 +2,4 @@
 
 This is the project repository for datastrikesback.yourcommunity.space
 
-To run the app, go to https://yourcommunityspace.github.io
+To run the app, go to https://yourcommunityspace.github.io/datastrikesback/
