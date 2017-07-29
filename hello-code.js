@@ -45,6 +45,19 @@
       bbox: { country: {}, state: {}, region: {}},
     };
 
+    var featureOnMap = {
+      click : function(e) { console.log('click:map'); } //zoomAustralia(); }
+    };
+    var featureOnCountry = {
+      click : onCountryClick,
+    };
+    var featureOnState = {
+      click : onStateClick,
+    };
+    var featureOnRegion = {
+      click : onRegionClick,
+    };
+
     var map = data.map = L.map('map', {
         dragging: false,
         touchZoom: false,
@@ -53,14 +66,15 @@
         keyboard: false,
         zoomControl: false,
       });
+    map.on(featureOnMap);
+    //var regionPane = map.createPane('regionPane');
 
-    var regionPane = map.createPane('regionPane');
-
-    var caps = 'http://govhack.locationsa.com.au/server/services/BaseMaps/StreetMapCasedNoParcels_wmas/MapServer/WMSServer?request=GetCapabilities&service=WMS';
-    var wmsOptions = {
-      layers: 'South Australia ', //SUBURB',
-    };
-    var wmsLayer = L.tileLayer.wms(caps, wmsOptions).addTo(map);
+    //var caps = 'http://govhack.locationsa.com.au/server/services/BaseMaps/StreetMapCasedNoParcels_wmas/MapServer/WMSServer?request=GetCapabilities&service=WMS';
+    //var wmsOptions = {
+    //  layers: 'South Australia ', //SUBURB',
+    //};
+    //var wmsLayer = L.tileLayer.wms(caps, wmsOptions).addTo(map);
+    //wmsLayer.on(featureOnGlobal);
 
     // Called when country boundary json is loaded
     // We dont show this as a map just use it for group boundary box
@@ -85,7 +99,7 @@
           // Scale so we zoom closer
           var poly = turf.transformScale(bbox, 0.7);   //        console.log(JSON.stringify(poly));
           bbox = turf.envelope(poly);                  //console.log(JSON.stringify(bbox));
-          console.log('' + state + ' bbox=' + JSON.stringify(bbox));
+          console.log('' + state); // + ' bbox=' + JSON.stringify(bbox));
           data.bbox.state[feature.properties.STATE_CODE] = bbox;
           layer.on(featureOnState);
         }, // called once for each state
@@ -99,7 +113,7 @@
     // Add one layer per state so we can change colours
     // Also compute each bounding box
     function onRegions(json) {
-      console.log('states');
+      console.log('onRegions');
 
       var item = L.geoJson(json, {
         onEachFeature: function (feature, layer) {
@@ -108,28 +122,20 @@
           var bbox = turf.envelope(feature); // return Feature<Polygon>:
           data.bbox.region[region] = bbox;
           layer.on(featureOnRegion);
+          console.log('' + region);
         },
         style : function (feature) { return Styles['regions']; }
       });
       data.regionsItem = item;
 
-      var regionPaneItems = new L.FeatureGroup(item, {pane: regionPane});
-      data.map.addLayer(regionPaneItems);
+      //var regionPaneItems = new L.FeatureGroup(item, {pane: regionPane});
+      // Dont add this until at correct zoom level // data.map.addLayer(item);
     }
-
-    var featureOnCountry = {
-      click : onCountryClick,
-    };
-    var featureOnState = {
-      click : onStateClick,
-    };
-    var featureOnRegion = {
-      click : onRegionClick,
-    };
 
     function onCountryClick(e) {
       // We dont see this once the states are loaded
       console.log('click:country');
+      zoomAustralia();
     }
 
     function onStateClick(e) {
@@ -141,24 +147,33 @@
         zoomState(state);
       }
       // alert(StateCode[state]);
+      //map.originalEvent.preventDefault();
     }
 
     function onRegionClick(e) {
       // We dont see this once the states are loaded
       var region = e.target.feature.properties.REGION;
       console.log('click:region=' + region);
+      // data.screen = Screens.ZOOM_STATE;
     }
 
     // Next one is CC0 license
     var p1 = new Promise(function(resolve, reject) { d3.json('assets/AUS.geo.json', function(json) { onCountry(json); resolve(); }); });
-    var p2 = new Promise(function(resolve, reject) { d3.json('assets/au-states.geojson', function(json) { onStates(json); zoomAustralia(); resolve(); }); });
+    var p2 = new Promise(function(resolve, reject) { d3.json('assets/au-states.geojson', function(json) { onStates(json); resolve(); }); });
     var p3 = new Promise(function(resolve, reject) { d3.json('assets/SAGovtRegions.geojson', function(json) { onRegions(json); resolve(); }); });
     // --allow-file-access-from-files (chrome)
     // npm install -g http-server , cd /path/to/project/folder , http-server
 
+    Promise.all([p1, p2, p3]).then(function() {
+      console.log('All data loaded');
+      zoomAustralia();
+    });
+
     function zoomAustralia() {
+      if (data.map.hasLayer(data.regionsItem)) data.map.removeLayer(data.regionsItem);
+
       var bbox = data.bbox.country['AUS'].geometry.coordinates[0];
-      console.log(bbox[0] + ';' + bbox[2]);
+      console.log('ZoomAustralia ' + bbox[0] + ';' + bbox[2]);
       data.map.fitBounds([ [bbox[0][1], bbox[0][0]], [bbox[2][1], bbox[2][0]] ]); // ffs why is the map lat lon backwards from geojson
       data.screen = Screens.INITIAL;
 
@@ -167,6 +182,9 @@
     }
 
     function zoomState(state) {
+      console.log('zoomState ' + StateCode[state]);
+      if (!data.map.hasLayer(data.regionsItem))  data.map.addLayer(data.regionsItem);
+
       var bbox = data.bbox.state[state].geometry.coordinates[0];
       data.map.fitBounds([ [bbox[0][1], bbox[0][0]], [bbox[2][1], bbox[2][0]] ]); // ffs why is the map lat lon backwards from geojson
       data.screen = Screens.ZOOM_STATE;
