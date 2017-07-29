@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "leaflet": "~1.0.0",
-    "leaflet.label": "^0.2.4"
+    "leaflet": "~1.0.0"
   }
 }
