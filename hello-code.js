@@ -56,8 +56,14 @@
       var item = L.geoJson(json, {
         onEachFeature: function (feature, layer) {
           data.stateLayers[feature.properties.STATE_CODE] = layer;
-          var bbox = data.bbox_state[feature.properties.STATE_CODE] = turf.envelope(feature);
-          console.log('' + StateCode[feature.properties.STATE_CODE] + ' bbox=' + JSON.stringify(bbox));
+          var bbox = turf.envelope(feature); // return Feature<Polygon>:
+          var state = StateCode[feature.properties.STATE_CODE];
+
+          // Scale so we zoom closer
+          var poly = turf.transformScale(bbox, 0.7);   //        console.log(JSON.stringify(poly));
+          bbox = turf.envelope(poly);                  //console.log(JSON.stringify(bbox));
+          console.log('' + state + ' bbox=' + JSON.stringify(bbox));
+          data.bbox_state[feature.properties.STATE_CODE] = bbox;
           layer.on(featureOnState);
         }, // called once for each state
         style : function (feature) { return Styles['states']; }
