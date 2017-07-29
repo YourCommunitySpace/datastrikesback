@@ -8,6 +8,7 @@
     "jquery": "^3.2.1",
     "leaflet": "~1.0.0",
     "lodash": "^4.17.4",
-    "purecss": "^1.0.0"
+    "purecss": "^1.0.0",
+    "remodal": "^1.1.1"
   }
 }
