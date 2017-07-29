@@ -250,6 +250,7 @@
       data.map.fitBounds([ [bbox[0][1], bbox[0][0]], [bbox[2][1], bbox[2][0]] ]); // ffs why is the map lat lon backwards from geojson
       data.screen = Screens.INITIAL;
 
+      $('#rtitle').html("");
       $('#regionSidebarChart').empty();
 
       // FIXME: is this the right spot to add the layer ... //      data.map.addLayer(data.statesItem);
@@ -270,6 +271,7 @@
 
       // drawRegionChart(data.grantsPerRegion); // k:v
 
+      $('#rtitle').html("Grant spending per region");
       var list = $('#regionSidebarChart').empty().append('<ul></ul>').find('ul');
       _.each(data.grantsPerRegion, function(v, k) {
         list.append('<li>' + k + ' $' + v + '</li>');
