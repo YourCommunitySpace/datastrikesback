@@ -39,11 +39,17 @@
 
     var data = {
       screen: Screens.INITIAL,
+
+      bbox: { country: {}, state: {}, region: {}},
       regionLayers: {},
       stateLayers: {}, // stateLayers[n] where nE 1..9 is a leaflet layer
+
       currentState: null,   // 1..9 if zoomed
-      bbox: { country: {}, state: {}, region: {}},
-      fakeStopPropagateToMap: false,
+
+      statesItem: null,
+
+      regionsList: {},
+      regionsItem: null,
     };
 
     var featureOnMap = {
@@ -116,9 +122,14 @@
     function onRegions(json) {
       console.log('onRegions');
 
+      data.regionsList = {};
       var item = L.geoJson(json, {
         onEachFeature: function (feature, layer) {
           var region = feature.properties.REGION; // from data.sa
+          data.regionsList[region] = {
+            feature: feature,
+            dollars: +0,
+          };
           data.regionLayers[region] = layer;
           var bbox = turf.envelope(feature); // return Feature<Polygon>:
           data.bbox.region[region] = bbox;
@@ -131,6 +142,34 @@
 
       //var regionPaneItems = new L.FeatureGroup(item, {pane: regionPane});
       // Dont add this until at correct zoom level // data.map.addLayer(item);
+    }
+
+    function onGrantsDollars(csv) {
+      console.log('onGrantsDollars regions.length=' + _.size(data.regionsList) + ', csv.length=' + csv.length);
+
+      // Organisation Name	Project Title	Project Description	Region	Amount
+      var item = {}
+      csv.forEach(function(row) {
+        item.name = row['Organisation Name'];
+        item.project = row['Project Title'];
+        item.description = row['Project Description'];
+        var grantRegionName= row['Region']
+        item.region = grantRegionName;
+
+        // This region needs to map supersets
+        // e.g. 'Whole of metropolitan area' ==> [ 'Eastern Adelaide', 'Northern Adelaide']
+
+        // Temporary hack
+        item.regionSet = [ grantRegionName ];
+
+        var amount = row['Amount'];
+        amount = Number(amount.replace(/[^0-9\.-]+/g,""));
+        if (!_.has(data.regionsList[grantRegionName])) {
+          data.regionsList[grantRegionName] = { dollars: +0 };
+        }
+        data.regionsList[grantRegionName].dollars += +amount;
+      });
+      _.each(data.regionsList, function(v, k) { console.log('Region ' + k + ' sum=' + v.dollars); });
     }
 
     function onCountryClick(e) {
@@ -161,13 +200,20 @@
     var p1 = new Promise(function(resolve, reject) { d3.json('assets/AUS.geo.json', function(json) { onCountry(json); resolve(); }); });
     var p2 = new Promise(function(resolve, reject) { d3.json('assets/au-states.geojson', function(json) { onStates(json); resolve(); }); });
     var p3 = new Promise(function(resolve, reject) { d3.json('assets/SAGovtRegions.geojson', function(json) { onRegions(json); resolve(); }); });
-    // --allow-file-access-from-files (chrome)
-    // npm install -g http-server , cd /path/to/project/folder , http-server
 
     Promise.all([p1, p2, p3]).then(function() {
-      console.log('All data loaded');
-      zoomAustralia();
+      // Depends on sagovregion geo
+      var p4 = new Promise(function(resolve, reject) { d3.csv('assets/grants-sa-funded-projects-2016-2017.csv', function(csv) { onGrantsDollars(csv); resolve(); }); });
+
+      p4.then(function() {
+        console.log('All data loaded');
+        zoomAustralia();
+      });
     });
+
+
+    // --allow-file-access-from-files (chrome)
+    // npm install -g http-server , cd /path/to/project/folder , http-server
 
     function zoomAustralia() {
       if (data.map.hasLayer(data.regionsItem)) data.map.removeLayer(data.regionsItem);
