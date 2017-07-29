@@ -265,6 +265,69 @@
 
       // Probably a better way to to this with leaflet panes or something
       // For now // _.each(data.regionsList, function(v,k) { if (v.marker) { v.marker.addTo(data.map); }});
+
+      drawRegionChart(data.grantsPerRegion); // k:v
+    }
+
+    function drawRegionChart(kvp) {
+      //var x = d3.scaleLinear().domain([0, d3.max(data)]).range([0, 420]);
+      //var x = d3.scaleBand().rangeRound([0, width]).paddingInner(0.05).align(0.1);
+      //var y = d3.scaleLinear().rangeRound([height, 0]);
+      //var z = d3.scaleOrdinal().range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+      //x.domain(['Regions']);
+      //y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
+      //z.domain(keys);
+
+      // http://bl.ocks.org/puzzler10/2226e8d73c8f10dcdac7c77357838ba2
+      //var svgWidth = 900,      	svgHeight = 500;
+      var margin = {top: 20, right: 10, bottom: 10, left: 20},
+        svgWidth = 260 - margin.left - margin.right,
+        svgHeight = 200 - margin.top - margin.bottom;
+      var data = _.map(kvp, function(v,k) { return [{x:'Region', y:v, z:k}]; });
+      console.log(JSON.stringify(data));
+      var stack = d3.stack();
+      var layers = stack(data);
+      var svg = d3.select("#regionSidebarChart").append("svg")
+			            .attr("width", svgWidth + margin.left + margin.right)
+			            .attr("height", svgHeight+ margin.top + margin.bottom);
+      var c10 = d3.scaleOrdinal(d3.schemeCategory10);
+      var groups = svg.selectAll("g")
+      				.data(layers)
+      				.enter()
+      				.append("g")
+				      .style("fill", function (d,i) {return c10(i)});
+      var xScale = d3.scaleOrdinal().range(['Region']).domain(['Region']); //   x.domain(layout[0].map(function (d) { return d.x }));
+      var xAxis = d3.axisBottom().scale(xScale);
+      var yScale = d3.scaleLinear().range([200 - margin.top, margin.bottom]).domain([0,200000]);
+      var yAxis = d3.axisLeft().scale(yScale);
+//				.ticks(5)
+//				.scale(yScale)
+//				.orient("right");
+      var rects = groups.selectAll("rect")
+            		  .data(function(d) {console.log(1); return d;} )
+              		.enter()
+              		.append("svg:rect")
+      	          .style("stroke", "black")
+              		.attr("x", function(d) {console.log('dx'); return x(d.x); })
+              		.attr("y", function(d) {console.log('dy %d %d',d.y0 + d.y ); return yScale(d.y0 + d.y)} )
+              		.attr("width", 100)
+              		.attr("height", function (d) {return 10; }); //yScale(d.y0) - yScale(d.y + d.y0)});
+      svg.append("g")
+      	.attr("class", "y axis")
+      	//.attr("transform", "translate(" + (svgWidth -100) +",0)")
+      	.attr("transform", "translate(100,0)")
+//      	.call(xAxis)
+      	.call(yAxis)
+      	.style("stroke", "black");
+/*
+      svg.append("g")
+      	.attr("class", "x axis")
+      	//.attr("transform", "translate(" + (svgWidth -100) +",0)")
+      	.attr("transform", "translate(100,0)")
+//      	.call(xAxis)
+      	.call(xAxis)
+      	.style("stroke", "black");
+        */
     }
 
     $(document).ready(function() {

@@ -74,6 +74,20 @@ label {
   border: none;
   color: #AECFE5;
 }
+
+
+
+.chart1 div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
+
+
+
 @media (min-width: 78em) {
   .splash-head {
     font-size: 300%;
