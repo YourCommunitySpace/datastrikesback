@@ -41,12 +41,13 @@
       screen: Screens.INITIAL,
       regionLayers: {},
       stateLayers: {}, // stateLayers[n] where nE 1..9 is a leaflet layer
-      currentZoomedState: null,   // 1..9 if zoomed
+      currentState: null,   // 1..9 if zoomed
       bbox: { country: {}, state: {}, region: {}},
+      fakeStopPropagateToMap: false,
     };
 
     var featureOnMap = {
-      click : function(e) { console.log('click:map'); } //zoomAustralia(); }
+      click : function(e) { console.log('click:map'); zoomAustralia(); }
     };
     var featureOnCountry = {
       click : onCountryClick,
@@ -141,20 +142,19 @@
     function onStateClick(e) {
       var state = e.target.feature.properties.STATE_CODE;
       console.log('click:state ' + state);
-      if (data.screen === Screens.ZOOM_STATE) {
+      if (data.screen === Screens.ZOOM_STATE && data.currentState !== state) {
         zoomAustralia();
       } else {
         zoomState(state);
       }
-      // alert(StateCode[state]);
-      //map.originalEvent.preventDefault();
+      L.DomEvent.stopPropagation(e);
     }
 
     function onRegionClick(e) {
       // We dont see this once the states are loaded
       var region = e.target.feature.properties.REGION;
       console.log('click:region=' + region);
-      // data.screen = Screens.ZOOM_STATE;
+      L.DomEvent.stopPropagation(e);
     }
 
     // Next one is CC0 license
@@ -188,6 +188,7 @@
       var bbox = data.bbox.state[state].geometry.coordinates[0];
       data.map.fitBounds([ [bbox[0][1], bbox[0][0]], [bbox[2][1], bbox[2][0]] ]); // ffs why is the map lat lon backwards from geojson
       data.screen = Screens.ZOOM_STATE;
+      data.currentState = state;
     }
 
     $(document).ready(function() {
