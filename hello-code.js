@@ -81,7 +81,11 @@
     function onStateClick(e) {
       var state = e.target.feature.properties.STATE_CODE;
       console.log('click:state ' + state);
-      zoomState(state);
+      if (data.screen === Screens.ZOOM_STATE) {
+        zoomAustralia();
+      } else {
+        zoomState(state);
+      }
       // alert(StateCode[state]);
     }
 
