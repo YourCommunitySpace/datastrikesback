@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@turf/turf": "^4.5.2",
-    "leaflet": "~1.0.0"
+    "leaflet": "~1.0.0",
+    "lodash": "^4.17.4"
   }
 }
