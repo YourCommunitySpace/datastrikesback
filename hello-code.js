@@ -155,6 +155,16 @@
       console.log('IMPORTED regionsList.count=' + _.size(data.regionsList));
     }
 
+    function onGrantsPerRegion(csv) {
+      console.log('onGrantsPerRegion csv.length=' + csv.length);
+
+      data.grantsPerRegion = {}
+      csv.forEach(function(row) {
+        data.grantsPerRegion[row.region] = row.total;
+      });
+      console.log('IMPORTED grantsPerRegion=' + JSON.stringify(data.grantsPerRegion));
+    }
+
     function onGrantsDollars(csv) {
       console.log('onGrantsDollars regions.length=' + _.size(data.regionsList) + ', csv.length=' + csv.length);
 
@@ -218,9 +228,10 @@
 
     Promise.all([p1, p2, p3]).then(function() {
       // Depends on sagovregion geo
-      var p4 = new Promise(function(resolve, reject) { d3.csv('assets/grants-sa-funded-projects-2016-2017.csv', function(csv) { onGrantsDollars(csv); resolve(); }); });
+      var p4 = new Promise(function(resolve, reject) { d3.csv('assets/grants_per_region.csv', function(csv) { onGrantsPerRegion(csv); resolve(); }); });
+      var p5 = new Promise(function(resolve, reject) { d3.csv('assets/grants-sa-funded-projects-2016-2017.csv', function(csv) { onGrantsDollars(csv); resolve(); }); });
 
-      p4.then(function() {
+      Promise.all([p4, p5]).then(function() {
         console.log('All data loaded');
         zoomAustralia();
       });
