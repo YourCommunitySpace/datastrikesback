@@ -243,7 +243,7 @@
 
     function zoomAustralia() {
       if (data.map.hasLayer(data.regionsItem)) data.map.removeLayer(data.regionsItem);
-      _.each(data.regionsList, function(v,k) { if (v.marker) v.marker.remove(); });
+      // For now    //  _.each(data.regionsList, function(v,k) { if (v.marker) v.marker.remove(); });
 
       var bbox = data.bbox.country['AUS'].geometry.coordinates[0];
       console.log('ZoomAustralia ' + bbox[0] + ';' + bbox[2]);
@@ -264,7 +264,7 @@
       data.currentState = state;
 
       // Probably a better way to to this with leaflet panes or something
-      _.each(data.regionsList, function(v,k) { if (v.marker) { v.marker.addTo(data.map); }});
+      // For now // _.each(data.regionsList, function(v,k) { if (v.marker) { v.marker.addTo(data.map); }});
     }
 
     $(document).ready(function() {
