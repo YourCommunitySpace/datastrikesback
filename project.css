@@ -4,35 +4,27 @@
   box-sizing:border-box;
 }
 
-html, body, main, #map {
-  height: 100%;
-  margin: 0px;
+div.A {
+  position: absolute;
+  top: 0;
+  left: 0;
+  left:0px;
+  right:0px;
 }
-html, body {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+div.B {
+  position: absolute;
+  left:0px;
+  right:0px;
+  top: 6em;
+  bottom: 3em;
+  border-color:yellow;
 }
-.button-success,
-.button-error,
-.button-warning,
-.button-secondary {
-  color: white;
-  border-radius: 4px;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-}
-.button-success {
-  background: rgb(28, 184, 65); /* this is a green */
-}
-.button-error {
-  background: rgb(202, 60, 60); /* this is a maroon */
-}
-.button-warning {
-  background: rgb(223, 117, 20); /* this is an orange */
-}
-.button-secondary {
-  background: rgb(66, 184, 221); /* this is a light blue */
+div.C {
+  position: absolute;
+  bottom: 0em;
+  left:0px;
+  right:0px;
+  height: 3em;
 }
 
 h1,
@@ -57,15 +49,11 @@ label {
   border-bottom: none;
   z-index: 4;
 }
-
 .home-menu .pure-menu-heading {
   color: white;
   font-weight: 400;
   font-size: 120%;
 }
-
-.home-menu .home-top { font-size: 160%; padding-top: 0 0; }
-
 .home-menu .pure-menu-selected a {
   color: white;
 }
