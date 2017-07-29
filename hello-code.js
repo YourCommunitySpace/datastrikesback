@@ -125,51 +125,66 @@
       data.regionsList = {};
       var item = L.geoJson(json, {
         onEachFeature: function (feature, layer) {
-          var region = feature.properties.REGION; // from data.sa
-          data.regionsList[region] = {
+          var listItem = {
             feature: feature,
             dollars: +0,
+            marker: null,
           };
-          data.regionLayers[region] = layer;
+
+          var region = feature.properties.REGION; // from data.sa
+          region = region.replace(/\s+/g,' '); // Fix wierd whitespace issues
+
           var bbox = turf.envelope(feature); // return Feature<Polygon>:
+
+          // Create a marker in the middle of the region
+          var pp = turf.centroid(feature);
+          var pp = [pp.geometry.coordinates[1], pp.geometry.coordinates[0]]; // WTAF - turf points are backwards relative to what leaflet needs
+          var marker = L.marker(pp, { title: region, zIndexOffset: 1000});
+          marker.bindTooltip(region, { permanent: true });
+          // console.log('v=' + region + ' marker=' + JSON.stringify(marker.toGeoJSON()));
+
+          listItem.marker = marker;
+          data.regionsList[region] = listItem;
+          data.regionLayers[region] = layer;
           data.bbox.region[region] = bbox;
           layer.on(featureOnRegion);
-          console.log('' + region);
         },
         style : function (feature) { return Styles['regions']; }
       });
       data.regionsItem = item;
-
-      //var regionPaneItems = new L.FeatureGroup(item, {pane: regionPane});
-      // Dont add this until at correct zoom level // data.map.addLayer(item);
+      console.log('IMPORTED regionsList.count=' + _.size(data.regionsList));
     }
 
     function onGrantsDollars(csv) {
       console.log('onGrantsDollars regions.length=' + _.size(data.regionsList) + ', csv.length=' + csv.length);
 
-      // Organisation Name	Project Title	Project Description	Region	Amount
       var item = {}
       csv.forEach(function(row) {
-        item.name = row['Organisation Name'];
-        item.project = row['Project Title'];
-        item.description = row['Project Description'];
-        var grantRegionName= row['Region']
-        item.region = grantRegionName;
-
-        // This region needs to map supersets
-        // e.g. 'Whole of metropolitan area' ==> [ 'Eastern Adelaide', 'Northern Adelaide']
-
-        // Temporary hack
-        item.regionSet = [ grantRegionName ];
+        var grantRegionName= row['Region'];
+        grantRegionName = grantRegionName.replace(/\s+/g,' '); // Fix wierd whitespace issues
 
         var amount = row['Amount'];
         amount = Number(amount.replace(/[^0-9\.-]+/g,""));
-        if (!_.has(data.regionsList[grantRegionName])) {
-          data.regionsList[grantRegionName] = { dollars: +0 };
+
+        // Remap the keys: Organisation Name	Project Title	Project Description	Region	Amount
+        item.name = row['Organisation Name'];
+        item.project = row['Project Title'];
+        item.description = row['Project Description'];
+        item.region = grantRegionName;
+
+        // FIXME: This region needs to map supersets
+        // e.g. 'Whole of metropolitan area' ==> [ 'Eastern Adelaide', 'Northern Adelaide']
+        // Temporary hack
+        item.regionSet = [ grantRegionName ];
+
+        if (!Object.keys(data.regionsList).includes(grantRegionName)) {
+          // console.log('Grants region not found in regions list, will need mapping. "' + grantRegionName + '"');
+          data.regionsList[grantRegionName] = { dollars: +0, feature: null, marker: null };
+        } else {
+          // console.log('Grants region found in regions list ' + grantRegionName);
         }
         data.regionsList[grantRegionName].dollars += +amount;
       });
-      _.each(data.regionsList, function(v, k) { console.log('Region ' + k + ' sum=' + v.dollars); });
     }
 
     function onCountryClick(e) {
@@ -217,6 +232,7 @@
 
     function zoomAustralia() {
       if (data.map.hasLayer(data.regionsItem)) data.map.removeLayer(data.regionsItem);
+      _.each(data.regionsList, function(v,k) { if (v.marker) v.marker.remove(); });
 
       var bbox = data.bbox.country['AUS'].geometry.coordinates[0];
       console.log('ZoomAustralia ' + bbox[0] + ';' + bbox[2]);
@@ -235,6 +251,9 @@
       data.map.fitBounds([ [bbox[0][1], bbox[0][0]], [bbox[2][1], bbox[2][0]] ]); // ffs why is the map lat lon backwards from geojson
       data.screen = Screens.ZOOM_STATE;
       data.currentState = state;
+
+      // Probably a better way to to this with leaflet panes or something
+      _.each(data.regionsList, function(v,k) { if (v.marker) { v.marker.addTo(data.map); }});
     }
 
     $(document).ready(function() {
