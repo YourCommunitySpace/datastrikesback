@@ -64,12 +64,17 @@ label {
   font-size: 120%;
 }
 
+.home-menu .home-top { font-size: 160%; padding-top: 0 0; }
+
 .home-menu .pure-menu-selected a {
   color: white;
 }
 
 .home-menu a {
   color: #6FBEF3;
+}
+.home-menu .home-sub {
+  color: white;
 }
 .home-menu li a:hover,
 .home-menu li a:focus {
