@@ -1,3 +1,9 @@
+* {
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing: border-box;
+  box-sizing:border-box;
+}
+
 html, body, main, #map {
   height: 100%;
   margin: 0px;
@@ -28,77 +34,66 @@ html, body {
 .button-secondary {
   background: rgb(66, 184, 221); /* this is a light blue */
 }
-main {
-  -webkit-box-sizing:border-box;
-  -moz-box-sizing: border-box;
-  box-sizing:border-box;
-  height:100%;
-  position:relative;
-}
-#button-home {
-  z-index: 9999;
-  position: absolute;
-  bottom: 24px;
-  left: 8px;
-  font-size: 125%;
-}
-.popup {
-  z-index: 9999;
-  opacity: 1;
-  background-color: #11ff11;
-  position: absolute;
-  top: 0%;
-  width: 100%;
-  text-align: center;
-}
-.pure-menu-link {
-  opacity: 1;
-  color: blue;
-}
-.panel {
-  background-color: rgba(245, 245, 245, 0.8);
-  position: relative;
-  margin: 10px auto;
-  padding: 8px;
-  height: 80%;
-  border-radius: 12px;
-  width: 80%;
-}
-.panel h2 { text-align: center; font-size: 1.5em; }
-.table-wrapper {
-  margin: 0 auto;
-  width: 90%;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label {
+  color: #34495e;
 }
 
-@media (min-width:640px) and (min-height:480px) {
-  .pure-menu-link {
-    font-size: 150%;
+.home-menu {
+  padding: 0.5em;
+  text-align: center;
+  box-shadow: 0 1px 1px rgba(0,0,0, 0.10);
+}
+.home-menu {
+  background: #2d3e50;
+}
+.pure-menu.pure-menu-fixed {
+  border-bottom: none;
+  z-index: 4;
+}
+
+.home-menu .pure-menu-heading {
+  color: white;
+  font-weight: 400;
+  font-size: 120%;
+}
+
+.home-menu .pure-menu-selected a {
+  color: white;
+}
+
+.home-menu a {
+  color: #6FBEF3;
+}
+.home-menu li a:hover,
+.home-menu li a:focus {
+  background: none;
+  border: none;
+  color: #AECFE5;
+}
+@media (min-width: 78em) {
+  .splash-head {
+    font-size: 300%;
   }
 }
+@media (min-width: 48em) {
+  /* We increase the body font size */
+  body {
+    font-size: 16px;
+  }
 
-@media (orientation:portrait) and (max-width:25em) {
-.calculator { top: 1.75em; }
-.panel { width: 90%;  }
-.panel legend { font-size: 75%; }
-.panel label { font-size: 75%; }
-h2.win-header { font-size: 1.25em; }
-.pure-menu-link { font-size: 90%; }
-}
-
-@media (orientation:portrait) and (max-width:30em) {
-.calculator { top: 2em; }
-.panel { width: 95%; height: 90%; }
-.panel label { font-size: 75%; }
-.panel input { font-size: 75%; }
-h2.win-header { font-size: 0.9em; }
-}
-
-.panel input.tweak {
-  color: black;
-  font-weight: bold;
-  font-size: larger;
-}
-.panel input.tweak[readonly] {
-  color: black;
-  font-weight: bold;
+  /* We can align the menu header to the left, but float the
+  menu items to the right. */
+  .home-menu {
+    text-align: left;
+  }
+  .home-menu ul {
+    float: right;
+  }
 }
