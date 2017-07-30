@@ -73,8 +73,8 @@ function clearTableArea()
 function showSidebarRegionGrants()
 {
   clearTableArea();
-  $('#rtitle').html("Grant spending per region, 2016-2017");
-  $('#rtitlesub').html("Click a row to see detailed project information<br/>Totals include averages to account for statewide data!");
+  $('#rtitle').html("Grant SA projects per region, 2016-2017");
+  $('#rtitlesub').html("Click a row to see detailed project information<br/>Totals include averages to account for statewide projects!");
   $('#regionSidebarTableContainer1').show();
   $("#regionSidebarTableDollars").tabulator("redraw");
   $("#regionSidebarTableDollars").tabulator("setSort", "total", "desc");
