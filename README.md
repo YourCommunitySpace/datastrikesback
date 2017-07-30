@@ -10,6 +10,8 @@ Hosting is by https://yourcommunityspace.github.io/datastrikesback/
 
 Hackerspace page: https://2017.hackerspace.govhack.org/project/yourcommunityspace
 
+Video: https://youtu.be/R9RTq_oGBd0
+
 # Original data sources
 
 Data in assets/ is either source from or has been modified from the following.
@@ -20,4 +22,5 @@ Data in assets/ is either source from or has been modified from the following.
 * Road Crash Data. Dataset URL https://data.sa.gov.au/data/dataset/road-crashes-in-sa
 * List of South Australian education and preschool sites with latitude and longitude, updated as at June 2017. Dataset URL https://data.sa.gov.au/data/dataset/child-development-sites
 * ABS Census table builder (for population data) http://www.abs.gov.au/websitedbs/D3310114.nsf/Home/2016%20TableBuilder
+* Federal grants data via http://regional.gov.au/local/assistance/fags-state-summaries-sa.aspx
 The app is a proof of concept! Other data sets have been identified and partially transformed for use with the app, as noted in the project page.
