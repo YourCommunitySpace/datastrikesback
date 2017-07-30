@@ -12,6 +12,9 @@ Hackerspace page: https://2017.hackerspace.govhack.org/project/yourcommunityspac
 
 Video: https://youtu.be/R9RTq_oGBd0
 
+The code is not in this git branch, check out the gh-pages branch instead.
+
+
 # Original data sources
 
 Data in assets/ is either source from or has been modified from the following.
