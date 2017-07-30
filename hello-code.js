@@ -78,6 +78,9 @@ function showSidebarSchoolData()
 {
   $('#rtitle').html("Schools per region");
   var list = $('#regionSidebarChart').removeAttr('hidden').show().empty().append('<ul></ul>').find('ul');
+  _.each(AppData.schoolsPerRegion, function(v, k) {
+    list.append('<li>' + k + ' $' + v + '</li>');
+  });
 }
 
 function router(screen)
@@ -137,10 +140,11 @@ $(document).ready(function() {
   Loader(AppData, {
     onDataLoaded: function() {
       $('.waiting').empty();
-
       $('#welcomeSelector').change(onWelcomeSelector);
-
       zoomAustralia();
+    },
+    onItemLoaded: function(item) {
+      $('.waiting').append(item + ' ');
      }
    });
 });

@@ -55,7 +55,7 @@ var Loader = function(AppData, options)
 
         // Create a marker in the middle of the region
         var pp = turf.centroid(feature);
-        var pp = [pp.geometry.coordinates[1], pp.geometry.coordinates[0]]; // WTAF - turf points are backwards relative to what leaflet needs
+        var pp = [pp.geometry.coordinates[1], pp.geometry.coordinates[0]]; // care - turf points are backwards relative to what leaflet needs
         var marker = L.marker(pp, { title: region, zIndexOffset: 1000});
         marker.bindTooltip(region, { permanent: true });
         // console.log('v=' + region + ' marker=' + JSON.stringify(marker.toGeoJSON()));
@@ -70,6 +70,7 @@ var Loader = function(AppData, options)
     });
     AppData.regionsItem = item;
     console.log('IMPORTED regionsList.count=' + _.size(AppData.regionsList));
+    if (options.onItemLoaded) options.onItemLoaded('Region map data');
   }
 
   function onGrantsPerRegion(csv) {
@@ -80,8 +81,27 @@ var Loader = function(AppData, options)
       AppData.grantsPerRegion[row.region] = row.total;
     });
     console.log('IMPORTED grantsPerRegion=' + JSON.stringify(AppData.grantsPerRegion));
+    if (options.onItemLoaded) options.onItemLoaded('Grants per Region');
   }
 
+  function onSchoolsPerRegion(csv) {
+    console.log('onSchoolsPerRegion csv.length=' + csv.length);
+
+    AppData.schoolsPerRegion = {}
+    csv.forEach(function(row) {
+      AppData.schoolsPerRegion[row.region] = row.total;
+    });
+    console.log('IMPORTED schoolsPerRegion=' + JSON.stringify(AppData.schoolsPerRegion));
+    if (options.onItemLoaded) options.onItemLoaded('Schools per Region');
+  }
+
+  // FIXME The data in this function is currently not used because we did the same thing manually
+  // FIXME due to time constraints of the weekend hackathon.
+  // FIXME But of course this doesnt scale!
+  // FIXME There were issues because the data is not "clean" i.e. multiple regions
+  // FIXME or region ids such as 'Metropolitan area' not defined in the region data
+  // But we still load the data (although we no longer sum it here) because if
+  // time permits show a popup of matching grants
   function onGrantsDollars(csv) {
     console.log('onGrantsDollars regions.length=' + _.size(AppData.regionsList) + ', csv.length=' + csv.length);
 
@@ -123,8 +143,9 @@ var Loader = function(AppData, options)
       // Depends on sagovregion geo
       var p4 = new Promise(function(resolve, reject) { d3.csv('assets/grants_per_region.csv', function(csv) { onGrantsPerRegion(csv); resolve(); }); });
       var p5 = new Promise(function(resolve, reject) { d3.csv('assets/grants-sa-funded-projects-2016-2017.csv', function(csv) { onGrantsDollars(csv); resolve(); }); });
+      var p6 = new Promise(function(resolve, reject) { d3.csv('assets/schools_by_region.csv', function(csv) { onSchoolsPerRegion(csv); resolve(); }); });
 
-      Promise.all([p4, p5]).then(function() {
+      Promise.all([p4, p5, p6]).then(function() {
         console.log('All data loaded');
         if (options) { options.onDataLoaded(); }
       });
