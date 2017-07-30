@@ -1,4 +1,4 @@
-# Code repository for datastrikesback yourcommunity.space @ GovHack
+# Code repository for yourcommunity.space @ GovHack 2017
 
 This is the project repository for datastrikesback.yourcommunity.space
 
