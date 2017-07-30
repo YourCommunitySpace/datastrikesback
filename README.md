@@ -25,3 +25,9 @@ Data in assets/ is either source from or has been modified from the following.
 * ABS Census table builder (for population data) http://www.abs.gov.au/websitedbs/D3310114.nsf/Home/2016%20TableBuilder
 * Federal grants data via http://regional.gov.au/local/assistance/fags-state-summaries-sa.aspx
 The app is a proof of concept! Other data sets have been identified and partially transformed for use with the app, as noted in the project page.
+
+Mapping Between data sets:
+"Government Regions" csv file contains a series of mapping between region names.
+From this we mapped post codes to regions  and local government areas to postcodes.
+
+List of government schools calcuated by interseccting the geojson map to lat/lon coordinates in csv file.
