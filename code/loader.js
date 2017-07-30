@@ -87,10 +87,11 @@ var Loader = function(AppData, options)
   function onSchoolsPerRegion(csv) {
     console.log('onSchoolsPerRegion csv.length=' + csv.length);
 
-    AppData.schoolsPerRegion = {}
+    AppData.schoolsPerRegion = []
     csv.forEach(function(row) {
-      AppData.schoolsPerRegion[row.region] = row.total;
+      AppData.schoolsPerRegion.push({id: row.id, region: row.region, count: row.total});
     });
+
     console.log('IMPORTED schoolsPerRegion=' + JSON.stringify(AppData.schoolsPerRegion));
     if (options.onItemLoaded) options.onItemLoaded('Schools per Region');
   }

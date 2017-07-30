@@ -68,8 +68,8 @@ function onRegionClick(e) {
 
 function clearTableArea()
 {
-  $('#regionSidebarTableContainer').hide();
-  $('#regionSidebarChart').hide();
+  $('#regionSidebarTableContainer1').hide();
+  $('#regionSidebarTableContainer2').hide();
   $('#rtitlesub').empty();
 }
 
@@ -77,20 +77,18 @@ function showSidebarRegionGrants()
 {
   clearTableArea();
   $('#rtitle').html("Grant spending per region, 2016-2017");
-  $('#rtitlesub').html("Click a row to see detailed project information");
-  $('#regionSidebarTableContainer').show();
+  $('#rtitlesub').html("Click a row to see detailed project information<br/>Totals include averages to account for statewide data!");
+  $('#regionSidebarTableContainer1').show();
   $("#regionSidebarTableDollars").tabulator("redraw");
+  $("#regionSidebarTableDollars").tabulator("setSort", "total", "desc");
 }
 
 function showSidebarSchoolData()
 {
   clearTableArea();
-  $('#regionSidebarChart').show();
   $('#rtitle').html("Schools per region");
-  var list = $('#regionSidebarChart').show().empty().append('<ul></ul>').find('ul');
-  _.each(AppData.schoolsPerRegion, function(v, k) {
-    list.append('<li>' + k + ' $' + v + '</li>');
-  });
+  $('#regionSidebarTableContainer2').show();
+  $("#regionSidebarTableSchools").tabulator("redraw");
 }
 
 function router(screen)
@@ -98,8 +96,9 @@ function router(screen)
   AppData.screen = Screens.INITIAL;
   $('#welcomeChooser').removeAttr('hidden').hide();
   $('#australiaSidebarText').removeAttr('hidden').hide();
-  $('#regionSidebarTableContainer').removeAttr('hidden').hide();
-  $('#regionSidebarChart').removeAttr('hidden').hide();
+  $('#regionSidebarTableContainer1').removeAttr('hidden').hide();
+  $('#regionSidebarTableContainer2').removeAttr('hidden').hide();
+  $('#regionSidebarOther').removeAttr('hidden').hide();
   switch (screen) {
     case Screens.INITIAL:
       $('#rtitle').html("Welcome");
@@ -159,7 +158,16 @@ function loadTables()
     },
   });
 
-console.log('AppData.detailedGrantsCsv=' + JSON.stringify(AppData.detailedGrantsCsv));
+  $("#regionSidebarTableSchools").tabulator({
+    data: AppData.schoolsPerRegion,
+    fitColumns: true,
+    columns:[
+      {title:"Region", field:"region", align:"left"},
+      {title:"Schools", field:"count", align:"left"},
+    ],
+  });
+
+  //console.log('AppData.detailedGrantsCsv=' + JSON.stringify(AppData.detailedGrantsCsv));
 
   $('#grantTableFull').tabulator({
     data: AppData.detailedGrantsCsv,
@@ -169,6 +177,7 @@ console.log('AppData.detailedGrantsCsv=' + JSON.stringify(AppData.detailedGrants
     columns:[ //Define Table Columns
       {title:"Amount", field:"amount", align:"left", xwidth: "100px"},
       {title:"Project", field:"project", align:"left", width: "400px"},
+      // tabulator seems to be buggy...
       // Project Title,Project Description,Region,Amount
     ],
   });
