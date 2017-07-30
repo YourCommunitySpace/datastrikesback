@@ -1,3 +1,7 @@
+// To Debug in Chrome, chrome wont load json from a local (implicit file: url)
+// So use node or something to serve the directory instead
+// Firefox is much more local development friendly.
+
     // https://raw.githubusercontent.com/johan/world.geo.json/master/countries/AUS.geo.json
     // https://raw.githubusercontent.com/johan/world.geo.json/master/countries/IND.geo.json
     // http://oramind.com/country-border-highlighting-with-leaflet-js/
@@ -250,11 +254,9 @@
       data.map.fitBounds([ [bbox[0][1], bbox[0][0]], [bbox[2][1], bbox[2][0]] ]); // ffs why is the map lat lon backwards from geojson
       data.screen = Screens.INITIAL;
 
-      $('#rtitle').html("");
-      $('#regionSidebarChart').empty();
-
-      // FIXME: is this the right spot to add the layer ... //      data.map.addLayer(data.statesItem);
-      $('#button-home').hide();
+      $('#rtitle').html("Welcome");
+      $('#australiaSidebarText').removeAttr('hidden').show();
+      $('#regionSidebarChart').removeAttr('hidden').hide().empty();
     }
 
     function zoomState(state) {
@@ -272,12 +274,13 @@
       // drawRegionChart(data.grantsPerRegion); // k:v
 
       $('#rtitle').html("Grant spending per region");
-      var list = $('#regionSidebarChart').empty().append('<ul></ul>').find('ul');
+      $('#australiaSidebarText').removeAttr('hidden').hide();
+      var list = $('#regionSidebarChart').removeAttr('hidden').show().empty().append('<ul></ul>').find('ul');
       _.each(data.grantsPerRegion, function(v, k) {
         list.append('<li>' + k + ' $' + v + '</li>');
       });
     }
 
     $(document).ready(function() {
-      $('#button-home').on('click', zoomAustralia);
+      //$('#button-home').on('click', zoomAustralia);
     });
