@@ -18,12 +18,7 @@ Copyright (c)  2017 by the yourcommunity.space team, created for GovHack 2017
 // --allow-file-access-from-files (chrome)
 // npm install -g http-server , cd /path/to/project/folder , http-server
 
-
-    // https://raw.githubusercontent.com/johan/world.geo.json/master/countries/AUS.geo.json
-    // https://raw.githubusercontent.com/johan/world.geo.json/master/countries/IND.geo.json
-    // http://oramind.com/country-border-highlighting-with-leaflet-js/
-    // State codes from https://raw.githubusercontent.com/edwinsteele/d3-projects/master/data/au-states.geojson
-    // 0..8  NSW, VIC, QLD, SA, WA, tAS, NT, ACT, other
+// http://oramind.com/country-border-highlighting-with-leaflet-js/
 
 function prepareMapDisplay()
 {
