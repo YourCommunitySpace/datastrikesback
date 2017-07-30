@@ -6,6 +6,8 @@ Government grants to community organisations are an underappreciated but very im
 
 To run the app, go to https://yourcommunityspace.github.io/datastrikesback/
 
+Hackerspace page: https://2017.hackerspace.govhack.org/project/yourcommunityspace
+
 # Original data sources
 
 Data in assets/ is either source from or has been modified from the following.
