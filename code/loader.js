@@ -37,7 +37,7 @@ var Loader = function(AppData, options)
   // Add one layer per state so we can change colours
   // Also compute each bounding box
   function onRegions(json) {
-    console.log('onRegions');
+    //console.log('onRegions');
 
     AppData.regionsList = {};
     var item = L.geoJson(json, {
@@ -69,31 +69,41 @@ var Loader = function(AppData, options)
       style : function (feature) { return Styles['regions']; }
     });
     AppData.regionsItem = item;
-    console.log('IMPORTED regionsList.count=' + _.size(AppData.regionsList));
+    //console.log('IMPORTED regionsList.count=' + _.size(AppData.regionsList));
     if (options.onItemLoaded) options.onItemLoaded('Region map data');
   }
 
   function onGrantsPerRegion(csv) {
-    console.log('onGrantsPerRegion csv.length=' + csv.length);
+    //console.log('onGrantsPerRegion csv.length=' + csv.length);
 
     AppData.grantsPerRegion = []
     csv.forEach(function(row) {
       AppData.grantsPerRegion.push({id: row.id, region: row.region, total: Math.floor(row.total / 1000.0)});
     });
-    console.log('IMPORTED grantsPerRegion=' + JSON.stringify(AppData.grantsPerRegion));
+    //console.log('IMPORTED grantsPerRegion=' + JSON.stringify(AppData.grantsPerRegion));
     if (options.onItemLoaded) options.onItemLoaded('Grants per Region');
   }
 
   function onSchoolsPerRegion(csv) {
-    console.log('onSchoolsPerRegion csv.length=' + csv.length);
+    //console.log('onSchoolsPerRegion csv.length=' + csv.length);
 
     AppData.schoolsPerRegion = []
     csv.forEach(function(row) {
       AppData.schoolsPerRegion.push({id: row.id, region: row.region, count: row.total});
     });
 
-    console.log('IMPORTED schoolsPerRegion=' + JSON.stringify(AppData.schoolsPerRegion));
+    //console.log('IMPORTED schoolsPerRegion=' + JSON.stringify(AppData.schoolsPerRegion));
     if (options.onItemLoaded) options.onItemLoaded('Schools per Region');
+  }
+
+  function onRoadCrashData(csv) {
+    //console.log('onRoadCrashData csv.length=' + csv.length);
+    AppData.roadCrashPerRegion = []
+    csv.forEach(function(row) {
+      AppData.roadCrashPerRegion.push({id: row.id, region: row.region, count: row.total});
+    });
+    console.log('IMPORTED roadCrashPerRegion=' + JSON.stringify(AppData.roadCrashPerRegion));
+    if (options.onItemLoaded) options.onItemLoaded('RoadCrash per Region');
   }
 
   // FIXME The data in this function is currently not used because we did the same thing manually
@@ -157,8 +167,9 @@ var Loader = function(AppData, options)
       var p4 = new Promise(function(resolve, reject) { d3.csv('assets/grants_per_region.csv', function(csv) { onGrantsPerRegion(csv); resolve(); }); });
       var p5 = new Promise(function(resolve, reject) { d3.csv('assets/grants-sa-funded-projects-2016-2017.csv', function(csv) { onGrantsDollars(csv); resolve(); }); });
       var p6 = new Promise(function(resolve, reject) { d3.csv('assets/schools_by_region.csv', function(csv) { onSchoolsPerRegion(csv); resolve(); }); });
+      var p7 = new Promise(function(resolve, reject) { d3.csv('assets/2016_road_crashed_region.csv', function(csv) { onRoadCrashData(csv); resolve(); }); });
 
-      Promise.all([p4, p5, p6]).then(function() {
+      Promise.all([p4, p5, p6, p7]).then(function() {
         console.log('All data loaded');
         if (options) { options.onDataLoaded(); }
       });

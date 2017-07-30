@@ -70,6 +70,7 @@ function clearTableArea()
 {
   $('#regionSidebarTableContainer1').hide();
   $('#regionSidebarTableContainer2').hide();
+  $('#regionSidebarTableContainer3').hide();
   $('#rtitlesub').empty();
 }
 
@@ -91,6 +92,15 @@ function showSidebarSchoolData()
   $("#regionSidebarTableSchools").tabulator("redraw");
 }
 
+function showSidebarRoadCrash()
+{
+  clearTableArea();
+  $('#rtitle').html("Road crash per region");
+  $('#rtitlesub').html("Includes crash report data for 2016, even minor");
+  $('#regionSidebarTableContainer3').show();
+  $("#regionSidebarTableRoadCrash").tabulator("redraw");
+}
+
 function router(screen)
 {
   AppData.screen = Screens.INITIAL;
@@ -98,6 +108,7 @@ function router(screen)
   $('#australiaSidebarText').removeAttr('hidden').hide();
   $('#regionSidebarTableContainer1').removeAttr('hidden').hide();
   $('#regionSidebarTableContainer2').removeAttr('hidden').hide();
+  $('#regionSidebarTableContainer3').removeAttr('hidden').hide();
   $('#regionSidebarOther').removeAttr('hidden').hide();
   switch (screen) {
     case Screens.INITIAL:
@@ -139,6 +150,7 @@ function onWelcomeSelector() {
   switch (key) {
     case 'ss1': showSidebarRegionGrants(); break;
     case 'ss2': showSidebarSchoolData(); break;
+    case 'ss3': showSidebarRoadCrash(); break;
   }
 }
 
@@ -164,6 +176,15 @@ function loadTables()
     columns:[
       {title:"Region", field:"region", align:"left"},
       {title:"Schools", field:"count", align:"left"},
+    ],
+  });
+
+  $("#regionSidebarTableRoadCrash").tabulator({
+    data: AppData.roadCrashPerRegion,
+    fitColumns: true,
+    columns:[
+      {title:"Region", field:"region", align:"left"},
+      {title:"Crashes (all)", field:"count", align:"left"},
     ],
   });
 
