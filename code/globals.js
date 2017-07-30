@@ -29,7 +29,7 @@ var Styles = {
   states: {
     weight: 1,
     opacity: 1,
-    color: 'red',
+    color: 'green',
     fillOpacity: 0.1
   },
   regions: {
