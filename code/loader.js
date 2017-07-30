@@ -102,8 +102,18 @@ var Loader = function(AppData, options)
     csv.forEach(function(row) {
       AppData.roadCrashPerRegion.push({id: row.id, region: row.region, count: row.total});
     });
-    console.log('IMPORTED roadCrashPerRegion=' + JSON.stringify(AppData.roadCrashPerRegion));
+    // console.log('IMPORTED roadCrashPerRegion=' + JSON.stringify(AppData.roadCrashPerRegion));
     if (options.onItemLoaded) options.onItemLoaded('RoadCrash per Region');
+  }
+
+  function onPopulation(csv) {
+    //console.log('onRoadCrashData csv.length=' + csv.length);
+    AppData.populationPerRegion = []
+    csv.forEach(function(row) {
+      AppData.populationPerRegion.push({id: row.id, region: row.region, count: row.total});
+    });
+    console.log('IMPORTED populationPerRegion=' + JSON.stringify(AppData.populationPerRegion));
+    if (options.onItemLoaded) options.onItemLoaded('Population per Region');
   }
 
   // FIXME The data in this function is currently not used because we did the same thing manually
@@ -168,8 +178,9 @@ var Loader = function(AppData, options)
       var p5 = new Promise(function(resolve, reject) { d3.csv('assets/grants-sa-funded-projects-2016-2017.csv', function(csv) { onGrantsDollars(csv); resolve(); }); });
       var p6 = new Promise(function(resolve, reject) { d3.csv('assets/schools_by_region.csv', function(csv) { onSchoolsPerRegion(csv); resolve(); }); });
       var p7 = new Promise(function(resolve, reject) { d3.csv('assets/2016_road_crashed_region.csv', function(csv) { onRoadCrashData(csv); resolve(); }); });
+      var p8 = new Promise(function(resolve, reject) { d3.csv('assets/cencus_population_total_region.csv', function(csv) { onPopulation(csv); resolve(); }); });
 
-      Promise.all([p4, p5, p6, p7]).then(function() {
+      Promise.all([p4, p5, p6, p7, p8]).then(function() {
         console.log('All data loaded');
         if (options) { options.onDataLoaded(); }
       });

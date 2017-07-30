@@ -66,6 +66,7 @@ function clearTableArea()
   $('#regionSidebarTableContainer1').hide();
   $('#regionSidebarTableContainer2').hide();
   $('#regionSidebarTableContainer3').hide();
+  $('#regionSidebarTableContainer4').hide();
   $('#rtitlesub').empty();
 }
 
@@ -87,6 +88,14 @@ function showSidebarSchoolData()
   $("#regionSidebarTableSchools").tabulator("redraw");
 }
 
+function showSidebarPopulation()
+{
+  clearTableArea();
+  $('#rtitle').html("Persons per region, 2016 Census");
+  $('#regionSidebarTableContainer4').show();
+  $("#regionSidebarTablePopulation").tabulator("redraw");
+}
+
 function showSidebarRoadCrash()
 {
   clearTableArea();
@@ -104,6 +113,7 @@ function router(screen)
   $('#regionSidebarTableContainer1').removeAttr('hidden').hide();
   $('#regionSidebarTableContainer2').removeAttr('hidden').hide();
   $('#regionSidebarTableContainer3').removeAttr('hidden').hide();
+  $('#regionSidebarTableContainer4').removeAttr('hidden').hide();
   $('#regionSidebarOther').removeAttr('hidden').hide();
   switch (screen) {
     case Screens.INITIAL:
@@ -146,6 +156,7 @@ function onWelcomeSelector() {
     case 'ss1': showSidebarRegionGrants(); break;
     case 'ss2': showSidebarSchoolData(); break;
     case 'ss3': showSidebarRoadCrash(); break;
+    case 'ss4': showSidebarPopulation(); break;
   }
 }
 
@@ -180,6 +191,15 @@ function loadTables()
     columns:[
       {title:"Region", field:"region", align:"left"},
       {title:"Crashes (all)", field:"count", align:"left"},
+    ],
+  });
+
+  $("#regionSidebarTablePopulation").tabulator({
+    data: AppData.populationPerRegion,
+    fitColumns: true,
+    columns:[
+      {title:"Region", field:"region", align:"left"},
+      {title:"Persons", field:"count", align:"left"},
     ],
   });
 
