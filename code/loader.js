@@ -116,6 +116,15 @@ var Loader = function(AppData, options)
     if (options.onItemLoaded) options.onItemLoaded('Population per Region');
   }
 
+  function onFederal(csv) {
+    AppData.fedGrantPerRegion = []
+    csv.forEach(function(row) {
+      AppData.fedGrantPerRegion.push({id: row.id, region: row.region, value: Math.floor(row.value / 1000)});
+    });
+    console.log('IMPORTED fedPerRegion=' + JSON.stringify(AppData.fedGrantPerRegion));
+    if (options.onItemLoaded) options.onItemLoaded('Fed Grants per Region');
+  }
+
   // FIXME The data in this function is currently not used because we did the same thing manually
   // FIXME due to time constraints of the weekend hackathon.
   // FIXME But of course this doesnt scale!
@@ -179,8 +188,9 @@ var Loader = function(AppData, options)
       var p6 = new Promise(function(resolve, reject) { d3.csv('assets/schools_by_region.csv', function(csv) { onSchoolsPerRegion(csv); resolve(); }); });
       var p7 = new Promise(function(resolve, reject) { d3.csv('assets/2016_road_crashed_region.csv', function(csv) { onRoadCrashData(csv); resolve(); }); });
       var p8 = new Promise(function(resolve, reject) { d3.csv('assets/cencus_population_total_region.csv', function(csv) { onPopulation(csv); resolve(); }); });
+      var p9 = new Promise(function(resolve, reject) { d3.csv('assets/federal_grant.csv', function(csv) { onFederal(csv); resolve(); }); });
 
-      Promise.all([p4, p5, p6, p7, p8]).then(function() {
+      Promise.all([p4, p5, p6, p7, p8, p9]).then(function() {
         console.log('All data loaded');
         if (options) { options.onDataLoaded(); }
       });

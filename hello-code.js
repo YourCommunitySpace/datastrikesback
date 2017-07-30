@@ -67,6 +67,7 @@ function clearTableArea()
   $('#regionSidebarTableContainer2').hide();
   $('#regionSidebarTableContainer3').hide();
   $('#regionSidebarTableContainer4').hide();
+  $('#regionSidebarTableContainer5').hide();
   $('#rtitlesub').empty();
 }
 
@@ -105,6 +106,14 @@ function showSidebarRoadCrash()
   $("#regionSidebarTableRoadCrash").tabulator("redraw");
 }
 
+function showSidebarFedGrants()
+{
+  clearTableArea();
+  $('#rtitle').html("Federal grant (aggregate) per region 2016");
+  $('#regionSidebarTableContainer5').show();
+  $("#regionSidebarTableFedGrants").tabulator("redraw");
+}
+
 function router(screen)
 {
   AppData.screen = Screens.INITIAL;
@@ -114,6 +123,7 @@ function router(screen)
   $('#regionSidebarTableContainer2').removeAttr('hidden').hide();
   $('#regionSidebarTableContainer3').removeAttr('hidden').hide();
   $('#regionSidebarTableContainer4').removeAttr('hidden').hide();
+  $('#regionSidebarTableContainer5').removeAttr('hidden').hide();
   $('#regionSidebarOther').removeAttr('hidden').hide();
   switch (screen) {
     case Screens.INITIAL:
@@ -157,6 +167,7 @@ function onWelcomeSelector() {
     case 'ss2': showSidebarSchoolData(); break;
     case 'ss3': showSidebarRoadCrash(); break;
     case 'ss4': showSidebarPopulation(); break;
+    case 'ss5': showSidebarFedGrants(); break;
   }
 }
 
@@ -200,6 +211,16 @@ function loadTables()
     columns:[
       {title:"Region", field:"region", align:"left"},
       {title:"Persons", field:"count", align:"left"},
+    ],
+  });
+
+  console.log('AppData.detailedGrantsCsv=' + JSON.stringify(AppData.fedGrantPerRegion));
+  $("#regionSidebarTableFedGrants").tabulator({
+    data: AppData.fedGrantPerRegion,
+    fitColumns: true,
+    columns:[
+      {title:"Region", field:"region", align:"left"},
+      {title:"Value ($'000)", field:"value", align:"left"},
     ],
   });
 
