@@ -66,22 +66,34 @@ function onRegionClick(e) {
   L.DomEvent.stopPropagation(e);
 }
 
+function showSidebarRegionGrants()
+{
+  $('#rtitle').html("Grant spending per region");
+  var list = $('#regionSidebarChart').removeAttr('hidden').show().empty().append('<ul></ul>').find('ul');
+  _.each(AppData.grantsPerRegion, function(v, k) {
+    list.append('<li>' + k + ' $' + v + '</li>');
+  });
+}
+function showSidebarSchoolData()
+{
+  $('#rtitle').html("Schools per region");
+  var list = $('#regionSidebarChart').removeAttr('hidden').show().empty().append('<ul></ul>').find('ul');
+}
+
 function router(screen)
 {
   AppData.screen = Screens.INITIAL;
   switch (screen) {
     case Screens.INITIAL:
       $('#rtitle').html("Welcome");
+      $('#welcomeChooser').removeAttr('hidden').hide();
       $('#australiaSidebarText').removeAttr('hidden').show();
       $('#regionSidebarChart').removeAttr('hidden').hide().empty();
       break;
     case Screens.ZOOM_STATE:
-      $('#rtitle').html("Grant spending per region");
+      $('#welcomeChooser').removeAttr('hidden').show();
       $('#australiaSidebarText').removeAttr('hidden').hide();
-      var list = $('#regionSidebarChart').removeAttr('hidden').show().empty().append('<ul></ul>').find('ul');
-      _.each(AppData.grantsPerRegion, function(v, k) {
-        list.append('<li>' + k + ' $' + v + '</li>');
-      });
+      onWelcomeSelector();
       break;
   }
 }
@@ -107,6 +119,16 @@ function zoomState(state) {
   router(Screens.ZOOM_STATE);
 }
 
+function onWelcomeSelector() {
+  //console.log($('#welcomeSelector option:selected').text());
+  //console.log($('#welcomeSelector option:selected').val());
+  var key = $('#welcomeSelector option:selected').val();
+  switch (key) {
+    case 'ss1': showSidebarRegionGrants(); break;
+    case 'ss2': showSidebarSchoolData(); break;
+  }
+}
+
 $(document).ready(function() {
   AppData.featureOnState = { click : onStateClick };
   AppData.featureOnRegion = { click : onRegionClick };
@@ -115,6 +137,9 @@ $(document).ready(function() {
   Loader(AppData, {
     onDataLoaded: function() {
       $('.waiting').empty();
+
+      $('#welcomeSelector').change(onWelcomeSelector);
+
       zoomAustralia();
      }
    });
