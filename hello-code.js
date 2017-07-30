@@ -75,7 +75,7 @@ function clearTableArea()
 function showSidebarRegionGrants()
 {
   clearTableArea();
-  $('#rtitle').html("Grant spending per region");
+  $('#rtitle').html("Grant spending per region, 2016-2017");
   $('#regionSidebarTableContainer').show();
   $("#regionSidebarTableDollars").tabulator("setData", AppData.grantsPerRegion); // Should be redundant but the control doesnt handle hide/show
 }
@@ -161,6 +161,7 @@ $(document).ready(function() {
   AppData.featureOnState = { click : onStateClick };
   AppData.featureOnRegion = { click : onRegionClick };
   AppData.map = prepareMapDisplay();
+  $('#go-home').on('click', zoomAustralia);
 
   Loader(AppData, {
     onDataLoaded: function() {
