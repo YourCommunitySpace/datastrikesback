@@ -40,7 +40,7 @@
   </div>
 
   <div id="layout" class="pure-g B">
-    <div class="sidebar fullheight pure-u-1 pure-u-md-2-5">
+    <div class="sidebar fullheight pure-u-1-3 pure-u-md-1-5">
       <div id="welcomeChooser" hidden>
         <label for="welcomeSelector">Please choose a summary</label>
         <select id="welcomeSelector">
@@ -51,7 +51,14 @@
       <div id="regionSidebar" >
         <h3 id="rtitle">Welcome</h3>
         <p id="rtitlesub"></p>
-        <div hidden id="australiaSidebarText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div hidden id="australiaSidebarText" style="padding:10px;">
+          <img id="logo" src="assets/yourcommunity-240.png"/>
+          <h3>Powered by yourcommunity.space</h3>
+          <hr>
+          <p>To get started, click on a state. Only South Australian data is populated thus far.</p>
+          <p>When your state regions are shown, choose between the different topics to investigate regional information.</p>
+          <p>Take note of other prompts. For example, clicking the regional grant summary table will show the underlying project data</p>
+        </div>
         <div hidden id="regionSidebarOther"></div>
         <div hidden id="regionSidebarTableContainer1">
           <div id="regionSidebarTableDollars"></div>
@@ -61,7 +68,7 @@
         </div>
       </div>
     </div>
-    <div class="content fullheight pure-u-1 pure-u-md-3-5">
+    <div class="content fullheight pure-u-2-3 pure-u-md-4-5">
       <div class="waiting">Please wait...</div>
       <div id="map" class="fullheight"></div>
     </div>
