@@ -19,6 +19,7 @@ Data in assets/ is either source from or has been modified from the following.
 * Australian states from the 2006 Census. Data from http://www.abs.gov.au/ausstats/abs@.nsf/DetailsPage/1259.0.30.0022006?OpenDocument via QGIS to simplify geometry
 * Grants SA funded projects 2016-2017. Dataset URL https://data.sa.gov.au/data/dataset/a572374e-ebdd-4513-a224-f7e79f126431
 * SA Government Regions (geojson) Dataset URL https://data.sa.gov.au/data/dataset/south-australian-government-regions/resource/0b972188-7d62-40b1-a614-f53c07cec81a
+* SA Government Regions (csv) Dataset https://data.sa.gov.au/data/dataset/4d92b947-7b09-4486-bd7a-e4b2ae15a62c/resource/d1a80b5d-5840-4b9b-a61b-5034fb1042de/download/sagrconcordancetables.csv
 * Road Crash Data. Dataset URL https://data.sa.gov.au/data/dataset/road-crashes-in-sa
 * List of South Australian education and preschool sites with latitude and longitude, updated as at June 2017. Dataset URL https://data.sa.gov.au/data/dataset/child-development-sites
 * ABS Census table builder (for population data) http://www.abs.gov.au/websitedbs/D3310114.nsf/Home/2016%20TableBuilder
