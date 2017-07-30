@@ -4,7 +4,9 @@ This is the project repository for datastrikesback.yourcommunity.space
 
 Government grants to community organisations are an underappreciated but very important glue that helps hold our local communities together. Supporting everything from the CFS, the local swimming pool or country town parklands, find out where the money is spent. This tool can be used by planners to see if any area or group is inadvertently biased to more funding, for further investigation.
 
-To run the app, go to https://yourcommunityspace.github.io/datastrikesback/
+To run the app, go to http://yourcommunity.space
+
+Hosting is by https://yourcommunityspace.github.io/datastrikesback/
 
 Hackerspace page: https://2017.hackerspace.govhack.org/project/yourcommunityspace
 
