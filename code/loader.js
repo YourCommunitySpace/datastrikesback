@@ -105,7 +105,18 @@ var Loader = function(AppData, options)
   function onGrantsDollars(csv) {
     console.log('onGrantsDollars regions.length=' + _.size(AppData.regionsList) + ', csv.length=' + csv.length);
 
-    var item = {}
+    var item = [];
+    var id = 1;
+    csv.forEach(function(row) {
+      if (id > 25) return; // hack to make things work for this demo
+      var amount = row['Amount'];
+      amount = Number(amount.replace(/[^0-9\.-]+/g,''));
+      item.push({ id: id, project:row['Project Title'], region:row['Region'], amount: Math.floor(amount) });
+      id ++;
+    });
+    AppData.detailedGrantsCsv = item;
+
+/*    var item = {}
     csv.forEach(function(row) {
       var grantRegionName= row['Region'];
       grantRegionName = grantRegionName.replace(/\s+/g,' '); // Fix wierd whitespace issues
@@ -132,6 +143,7 @@ var Loader = function(AppData, options)
       }
       AppData.regionsList[grantRegionName].dollars += +amount;
     });
+*/
   }
 
     // Next one is CC0 license

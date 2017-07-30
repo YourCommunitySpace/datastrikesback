@@ -70,14 +70,16 @@ function clearTableArea()
 {
   $('#regionSidebarTableContainer').hide();
   $('#regionSidebarChart').hide();
+  $('#rtitlesub').empty();
 }
 
 function showSidebarRegionGrants()
 {
   clearTableArea();
   $('#rtitle').html("Grant spending per region, 2016-2017");
+  $('#rtitlesub').html("Click a row to see detailed project information");
   $('#regionSidebarTableContainer').show();
-  $("#regionSidebarTableDollars").tabulator("setData", AppData.grantsPerRegion); // Should be redundant but the control doesnt handle hide/show
+  $("#regionSidebarTableDollars").tabulator("redraw");
 }
 
 function showSidebarSchoolData()
@@ -144,16 +146,31 @@ function onWelcomeSelector() {
 function loadTables()
 {
   $("#regionSidebarTableDollars").tabulator({
-    //height:205, // set height of table
-    //fitColumns:true, //fit columns to width of table (optional)
     data: AppData.grantsPerRegion,
+    fitColumns: true,
     columns:[ //Define Table Columns
-        {title:"Region", field:"region", align:"left"},
-        {title:"Spend ($'000)", field:"total", align:"left"},
+      {title:"Region", field:"region", align:"left"},
+      {title:"Spend ($'000)", field:"total", align:"left"},
     ],
-    rowClick:function(e, row){ //trigger an alert message when the row is clicked
-        alert("Row " + row.getData().id + " Clicked!!!!");
+    rowClick:function(e, row) {
+      $('[data-remodal-id=modal-grant-full]').remodal().open();
+//      $('#grantTableFull').tabulator("redraw", true);
+      $('#grantTableFull').tabulator("setData", AppData.detailedGrantsCsv);
     },
+  });
+
+console.log('AppData.detailedGrantsCsv=' + JSON.stringify(AppData.detailedGrantsCsv));
+
+  $('#grantTableFull').tabulator({
+    data: AppData.detailedGrantsCsv,
+    height: "250px",
+    //pagination:"local", // doesnt work :-()
+    //fitColumns: true,
+    columns:[ //Define Table Columns
+      {title:"Amount", field:"amount", align:"left", xwidth: "100px"},
+      {title:"Project", field:"project", align:"left", width: "400px"},
+      // Project Title,Project Description,Region,Amount
+    ],
   });
 }
 
