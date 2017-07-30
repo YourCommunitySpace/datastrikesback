@@ -76,9 +76,9 @@ var Loader = function(AppData, options)
   function onGrantsPerRegion(csv) {
     console.log('onGrantsPerRegion csv.length=' + csv.length);
 
-    AppData.grantsPerRegion = {}
+    AppData.grantsPerRegion = []
     csv.forEach(function(row) {
-      AppData.grantsPerRegion[row.region] = row.total;
+      AppData.grantsPerRegion.push({id: row.id, region: row.region, total: Math.floor(row.total / 1000.0)});
     });
     console.log('IMPORTED grantsPerRegion=' + JSON.stringify(AppData.grantsPerRegion));
     if (options.onItemLoaded) options.onItemLoaded('Grants per Region');

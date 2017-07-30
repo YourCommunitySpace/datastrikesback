@@ -66,18 +66,26 @@ function onRegionClick(e) {
   L.DomEvent.stopPropagation(e);
 }
 
+function clearTableArea()
+{
+  $('#regionSidebarTableContainer').hide();
+  $('#regionSidebarChart').hide();
+}
+
 function showSidebarRegionGrants()
 {
+  clearTableArea();
   $('#rtitle').html("Grant spending per region");
-  var list = $('#regionSidebarChart').removeAttr('hidden').show().empty().append('<ul></ul>').find('ul');
-  _.each(AppData.grantsPerRegion, function(v, k) {
-    list.append('<li>' + k + ' $' + v + '</li>');
-  });
+  $('#regionSidebarTableContainer').show();
+  $("#regionSidebarTableDollars").tabulator("setData", AppData.grantsPerRegion); // Should be redundant but the control doesnt handle hide/show
 }
+
 function showSidebarSchoolData()
 {
+  clearTableArea();
+  $('#regionSidebarChart').show();
   $('#rtitle').html("Schools per region");
-  var list = $('#regionSidebarChart').removeAttr('hidden').show().empty().append('<ul></ul>').find('ul');
+  var list = $('#regionSidebarChart').show().empty().append('<ul></ul>').find('ul');
   _.each(AppData.schoolsPerRegion, function(v, k) {
     list.append('<li>' + k + ' $' + v + '</li>');
   });
@@ -86,16 +94,17 @@ function showSidebarSchoolData()
 function router(screen)
 {
   AppData.screen = Screens.INITIAL;
+  $('#welcomeChooser').removeAttr('hidden').hide();
+  $('#australiaSidebarText').removeAttr('hidden').hide();
+  $('#regionSidebarTableContainer').removeAttr('hidden').hide();
+  $('#regionSidebarChart').removeAttr('hidden').hide();
   switch (screen) {
     case Screens.INITIAL:
       $('#rtitle').html("Welcome");
-      $('#welcomeChooser').removeAttr('hidden').hide();
-      $('#australiaSidebarText').removeAttr('hidden').show();
-      $('#regionSidebarChart').removeAttr('hidden').hide().empty();
+      $('#australiaSidebarText').show();
       break;
     case Screens.ZOOM_STATE:
-      $('#welcomeChooser').removeAttr('hidden').show();
-      $('#australiaSidebarText').removeAttr('hidden').hide();
+      $('#welcomeChooser').show();
       onWelcomeSelector();
       break;
   }
@@ -132,6 +141,22 @@ function onWelcomeSelector() {
   }
 }
 
+function loadTables()
+{
+  $("#regionSidebarTableDollars").tabulator({
+    //height:205, // set height of table
+    //fitColumns:true, //fit columns to width of table (optional)
+    data: AppData.grantsPerRegion,
+    columns:[ //Define Table Columns
+        {title:"Region", field:"region", align:"left"},
+        {title:"Spend ($'000)", field:"total", align:"left"},
+    ],
+    rowClick:function(e, row){ //trigger an alert message when the row is clicked
+        alert("Row " + row.getData().id + " Clicked!!!!");
+    },
+  });
+}
+
 $(document).ready(function() {
   AppData.featureOnState = { click : onStateClick };
   AppData.featureOnRegion = { click : onRegionClick };
@@ -141,6 +166,7 @@ $(document).ready(function() {
     onDataLoaded: function() {
       $('.waiting').empty();
       $('#welcomeSelector').change(onWelcomeSelector);
+      loadTables();
       zoomAustralia();
     },
     onItemLoaded: function(item) {
